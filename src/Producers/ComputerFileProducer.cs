@@ -78,5 +78,10 @@ namespace Sharphound.Producers
                 Console.WriteLine($"Error opening ComputerFile: {e}");
             }
         }
+
+        public override async Task ProduceConfigNC()
+        {
+            // Does not make sense for Computer file
+        }
     }
 }
