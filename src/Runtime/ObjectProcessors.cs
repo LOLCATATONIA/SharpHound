@@ -521,10 +521,11 @@ namespace Sharphound.Runtime
                 ret.Aces = _aclProcessor.ProcessACL(resolvedSearchResult, entry).ToArray();
                 ret.IsACLProtected = _aclProcessor.IsACLProtected(entry);
 
+                // Cert thumbprint
                 var rawCertificate = entry.GetByteProperty(LDAPProperties.CACertificate);
                 if (rawCertificate != null)
                 {
-                    ret.Certificate = new Certificate(rawCertificate);
+                    ret.CertThumbprint = _certAbuseProcessor.GetCertThumbprint(rawCertificate);
                 }
             }
 
@@ -550,11 +551,12 @@ namespace Sharphound.Runtime
 
                 ret.Aces = _aclProcessor.ProcessACL(resolvedSearchResult, entry).ToArray();
                 ret.IsACLProtected = _aclProcessor.IsACLProtected(entry);
-
+                
+                // Cert thumbprint
                 var rawCertificate = entry.GetByteProperty(LDAPProperties.CACertificate);
                 if (rawCertificate != null)
                 {
-                    ret.Certificate = new Certificate(rawCertificate);
+                    ret.CertThumbprint = _certAbuseProcessor.GetCertThumbprint(rawCertificate);
                 }
             }
 
@@ -581,10 +583,12 @@ namespace Sharphound.Runtime
                 ret.Aces = _aclProcessor.ProcessACL(resolvedSearchResult, entry).ToArray();
                 ret.IsACLProtected = _aclProcessor.IsACLProtected(entry);
 
+                // Certificate
                 var rawCertificate = entry.GetByteProperty(LDAPProperties.CACertificate);
                 if (rawCertificate != null)
                 {
                     ret.Certificate = new Certificate(rawCertificate);
+                    ret.CertThumbprint = ret.Certificate.Thumbprint;
                 }
 
                 // Enabled cert templates
@@ -637,10 +641,11 @@ namespace Sharphound.Runtime
                 ret.Aces = _aclProcessor.ProcessACL(resolvedSearchResult, entry).ToArray();
                 ret.IsACLProtected = _aclProcessor.IsACLProtected(entry);
 
+                // Cert thumbprints
                 var rawCertificates = entry.GetByteArrayProperty(LDAPProperties.CACertificate);
                 var certificates = from rawCertificate in rawCertificates
-                                   select new Certificate(rawCertificate);
-                ret.Certificates = certificates.ToArray();
+                                   select _certAbuseProcessor.GetCertThumbprint(rawCertificate);
+                ret.CertThumbprints = certificates.ToArray();
             }
 
             return ret;
